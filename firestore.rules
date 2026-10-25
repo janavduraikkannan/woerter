@@ -1,4 +1,6 @@
 rules_version = '2';
+// The same file is in every Linguae repository (verba, palabras, mots, woerter, linguae); publish it in the Firebase
+// console for project verba-791ca after changing it, and copy it to all of them.
 // Verba accounts: each account is one document named by its secret account key.
 // A key can read and save its own document; nobody can list or delete accounts.
 //
@@ -15,8 +17,11 @@ rules_version = '2';
 // board/{id}, with the same id (so one username serves both sites) and Spanish course codes. A username belongs to an
 // account while either of its boards points at it.
 //
-// German leaderboard: boardde/{id} is the board of Wörter, the German sister site, with the same rules as boardes/{id}.
-// (These rules must be published in the Firebase console before the German leaderboard can save.)
+// French leaderboard: boardfr/{id} is the public board of Mots, the French sister site, with the same rules and ids as
+// boardes/{id}. A username belongs to an account while any of its boards points at it.
+//
+// German leaderboard: boardde/{id} is the public board of Wörter, the German sister site, with the same rules and ids as
+// boardes/{id}.
 //
 // Password logins (optional): logins/{id} holds the account key, encrypted in the browser with a key stretched from
 // the username and password. The id comes from the same stretching, so it reveals neither. No password is ever
@@ -95,6 +100,21 @@ service cloud.firestore {
              + (request.time.toMillis() - resource.data.t.toMillis()) / 100;
       allow delete: if false;
     }
+    match /boardfr/{pid} {
+      allow get: if true;
+      allow list: if request.query.limit <= 300;
+      allow create: if pid.matches('[0-9a-f]{24}')
+        && boardOk(pid, request.resource.data, ['', 'I', 'I+', 'II', 'II+', 'III', 'III+', 'IV', 'IV+', 'AP', 'AP+'])
+        && request.resource.data.n == 0
+        && request.resource.data.prev == ''
+        && request.resource.data.xp <= 100000;
+      allow update: if boardOk(pid, request.resource.data, ['', 'I', 'I+', 'II', 'II+', 'III', 'III+', 'IV', 'IV+', 'AP', 'AP+'])
+        && request.resource.data.n == resource.data.n + 1
+        && hashing.sha256(request.resource.data.prev) == resource.data.lock
+        && request.resource.data.xp <= resource.data.xp + 1000
+             + (request.time.toMillis() - resource.data.t.toMillis()) / 100;
+      allow delete: if false;
+    }
     match /boardde/{pid} {
       allow get: if true;
       allow list: if request.query.limit <= 300;
@@ -115,6 +135,8 @@ service cloud.firestore {
                 && getAfter(/databases/$(database)/documents/board/$(owner)).data.hid == hid)
           || (existsAfter(/databases/$(database)/documents/boardes/$(owner))
                 && getAfter(/databases/$(database)/documents/boardes/$(owner)).data.hid == hid)
+          || (existsAfter(/databases/$(database)/documents/boardfr/$(owner))
+                && getAfter(/databases/$(database)/documents/boardfr/$(owner)).data.hid == hid)
           || (existsAfter(/databases/$(database)/documents/boardde/$(owner))
                 && getAfter(/databases/$(database)/documents/boardde/$(owner)).data.hid == hid);
     }

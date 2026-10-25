@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI keys for Wörter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Figtree:wght@400;600;700;800&family=Gentium+Book+Plus:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" href="img/frohlix/happy.svg" type="image/svg+xml">
+<script>(function(){var t="light";try{if(localStorage.getItem("verba-theme")==="dark")t="dark";}catch(e){}document.documentElement.setAttribute("data-theme",t);})();</script>
+<style>
+:root{--latin:"Gentium Book Plus",Georgia,serif;--ui:"Figtree","Segoe UI",system-ui,sans-serif;--display:"Fraunces",Georgia,serif;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#ECE3D0;--surface:#F6F0E2;--ink:#2B241E;--muted:#6A5D4F;--line:#C9B998;--line2:#A8946E;--accent:#2D5193;--gold:#946A10;--wash:#E4D7BC;color-scheme:light}
+:root[data-theme="dark"]{--bg:#1E1B17;--surface:#282420;--ink:#EFE6D4;--muted:#B5A892;--line:#4B4339;--line2:#14120F;--accent:#86B9B8;--gold:#DDB25A;--wash:#2F2A23;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:18px;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px 60px}
+header{padding:28px 0 16px;border-bottom:1px solid var(--line)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,5vw,2.8rem);margin:0;line-height:1.1}
+header p{color:var(--muted);margin:8px 0 0}
+a{color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--line);border:2px solid var(--line);border-radius:10px;padding:16px 22px 18px;margin:18px 0;box-shadow:3px 3px 0 var(--line2)}
+.card h2{font-family:var(--display);font-weight:600;font-size:1.6rem;margin:0}
+.card .pick{display:inline-block;font-size:.85rem;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:3px;padding:0 7px;margin-left:8px;vertical-align:4px;font-family:var(--ui)}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 16px;margin:12px 0 0}
+dt{font-weight:700;color:var(--muted)}
+dd{margin:0}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--wash);padding:1px 5px;border-radius:3px;font-size:.9em}
+.note{color:var(--muted);font-size:.95rem}
+@media (max-width:520px){dl{grid-template-columns:1fr}dt{margin-top:6px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <img src="img/frohlix/sly.svg" alt="Fröhlix the cat" style="width:110px;float:right;margin:0 0 8px 12px">
+  <h1>AI keys that work with Wörter</h1>
+  <p>Any one of these unlocks the AI answer checking and the “Ask the AI” box. The free ones need no credit card; the paid ones at the bottom charge your own account a tiny amount per question. Paste the key on the start screen; the site reads the key’s first letters to tell which service it belongs to. Have more than one? Turn on <b>Advanced: several keys</b> to rank them, and the site falls back to the next key whenever one fails.</p>
+</header>
+
+<section class="card">
+  <h2>Groq <span class="pick">Best first choice</span></h2>
+  <dl>
+    <dt>Get a key</dt><dd><a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a> (free account, no card). New to this? Follow the <a href="getkey.html">step-by-step guide with a video</a>.</dd>
+    <dt>Free limits</dt><dd>About 30 requests a minute and roughly 1,000 a day on the Llama 3.3 70B model the site uses.</dd>
+    <dt>Key starts with</dt><dd><code>gsk_</code></dd>
+    <dt>Notes</dt><dd>Very fast. This is the one the site has been using all along.</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <h2>Google Gemini <span class="pick">Good backup</span></h2>
+  <dl>
+    <dt>Get a key</dt><dd><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> (Google account)</dd>
+    <dt>Free limits</dt><dd>Free on the Flash and Flash-Lite models, which is what the site uses. Google changes the exact numbers often and shows your current ones in AI Studio. The Pro models are no longer free.</dd>
+    <dt>Key starts with</dt><dd><code>AQ.</code> (new keys) or <code>AIza</code> (older keys); both work</dd>
+    <dt>Notes</dt><dd>On the free tier, Google may use what you send to improve its products, and people may review it.</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <h2>OpenRouter</h2>
+  <dl>
+    <dt>Get a key</dt><dd><a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a> (free account, no card)</dd>
+    <dt>Free limits</dt><dd>Models whose names end in <code>:free</code> cost nothing: 20 requests a minute and 50 a day (1,000 a day if the account has ever bought $10 of credit). The site only picks free models.</dd>
+    <dt>Key starts with</dt><dd><code>sk-or-</code></dd>
+    <dt>Notes</dt><dd>One key, many models. Free models can be busy at peak times and get swapped out.</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <h2>Cerebras</h2>
+  <dl>
+    <dt>Get a key</dt><dd><a href="https://cloud.cerebras.ai" target="_blank" rel="noopener">cloud.cerebras.ai</a></dd>
+    <dt>Free limits</dt><dd>Free trial tier: 5 requests a minute and about 1 million tokens a day.</dd>
+    <dt>Key starts with</dt><dd><code>csk-</code></dd>
+    <dt>Notes</dt><dd>Extremely fast, but 5 a minute is tight if you ask a lot of questions. Some recent reports say new sign-ups now get trial credit and may need a card, so check before relying on it.</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <h2>Mistral</h2>
+  <dl>
+    <dt>Get a key</dt><dd><a href="https://console.mistral.ai/api-keys" target="_blank" rel="noopener">console.mistral.ai/api-keys</a> (free “Experiment” plan)</dd>
+    <dt>Free limits</dt><dd>About 1 request a second, with a large monthly token allowance.</dd>
+    <dt>Key starts with</dt><dd>No special prefix, so choose “Mistral” in the AI provider list.</dd>
+    <dt>Notes</dt><dd>Needs phone verification, and the free plan requires agreeing that Mistral may train on your requests.</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <h2>Hugging Face</h2>
+  <dl>
+    <dt>Get a key</dt><dd><a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener">huggingface.co/settings/tokens</a> (free account; make a token with “Make calls to Inference Providers” allowed)</dd>
+    <dt>Free limits</dt><dd>A small monthly credit (about $0.10) shared across many hosted models. Enough for a modest amount of practice each month, then it stops until next month.</dd>
+    <dt>Key starts with</dt><dd><code>hf_</code></dd>
+    <dt>Notes</dt><dd>Huge model catalog, but the smallest free allowance here. Good as a spare.</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <h2>Cohere</h2>
+  <dl>
+    <dt>Get a key</dt><dd><a href="https://dashboard.cohere.com/api-keys" target="_blank" rel="noopener">dashboard.cohere.com/api-keys</a> (a free trial key is made when you sign up, no card)</dd>
+    <dt>Free limits</dt><dd>1,000 requests a month and 20 a minute, for non-commercial use.</dd>
+    <dt>Key starts with</dt><dd>No special prefix, so choose “Cohere” in the AI provider list.</dd>
+    <dt>Notes</dt><dd>Uses Cohere’s Command A model. Fine for personal studying.</dd>
+  </dl>
+</section>
+
+<h2 style="font-family:var(--display);font-weight:600;font-size:1.9rem;margin:34px 0 0">Paid keys</h2>
+<p class="note" style="margin-top:4px">These need a card on file and bill you per use. Grading one answer or asking Fröhlix one question uses a small, fast model and costs a fraction of a cent. Set a monthly spending limit on the provider’s site so a key can never run up a surprise bill.</p>
+
+<section class="card">
+  <h2>OpenAI (ChatGPT)</h2>
+  <dl>
+    <dt>Get a key</dt><dd><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a> (add credit under Billing first)</dd>
+    <dt>Model used</dt><dd>A “mini” GPT model, picked from the ones your key can use.</dd>
+    <dt>Key starts with</dt><dd><code>sk-proj-</code> (older keys: <code>sk-</code>)</dd>
+    <dt>Notes</dt><dd>A ChatGPT Plus subscription does not include API use; the API is billed separately.</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <h2>Anthropic (Claude)</h2>
+  <dl>
+    <dt>Get a key</dt><dd><a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com/settings/keys</a> (buy credit under Billing first)</dd>
+    <dt>Model used</dt><dd>The newest Claude Haiku your key can use, falling back to Sonnet.</dd>
+    <dt>Key starts with</dt><dd><code>sk-ant-</code></dd>
+    <dt>Notes</dt><dd>A Claude Pro or Max subscription does not include API use; the API is billed separately.</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <h2>xAI (Grok)</h2>
+  <dl>
+    <dt>Get a key</dt><dd><a href="https://console.x.ai" target="_blank" rel="noopener">console.x.ai</a> (buy credit first)</dd>
+    <dt>Model used</dt><dd>A fast, low-cost Grok model, picked from the ones your key can use.</dd>
+    <dt>Key starts with</dt><dd><code>xai-</code></dd>
+  </dl>
+</section>
+
+<section class="card" style="border-top-color:var(--muted)">
+  <h2>Checked, but they don’t work here</h2>
+  <dl>
+    <dt>NVIDIA NIM</dt><dd>Generous free tier (about 40 requests a minute), but NVIDIA’s servers refuse requests that come straight from a web page, which is how this site talks to the AI.</dd>
+    <dt>Cloudflare Workers AI</dt><dd>Needs your account ID as well as a token, and its API is meant to be called from a server, not a web page.</dd>
+    <dt>BazaarLink</dt><dd>A small reseller that passes your requests on to other companies. Its free limits aren’t clearly published and there’s little independent information about it, so it isn’t listed.</dd>
+  </dl>
+</section>
+
+<p class="note">Free limits change often; these were checked in October 2026. Unless you tick “Remember key(s) on this browser” or “Save key(s) to my account”, your keys stay in the open tab only. Saved keys are stored as plain text, so only tick those boxes on your own device. Treat a key like a password: don’t share it or post it anywhere.</p>
+<p><a href="./">← Back to Wörter</a></p>
+</div>
+</body>
+</html>

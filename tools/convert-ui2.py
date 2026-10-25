@@ -1,0 +1,80 @@
+"""Second conversion pass: the tutor's persona and prompts, onboarding, umlaut typing, feedback text and the charts."""
+import re
+p='index.html';h=open(p,encoding='utf-8').read()
+miss=[]
+def rep(x,y):
+    global h
+    if x in h:h=h.replace(x,y)
+    elif y not in h:miss.append(x[:110])
+def rex(pat,y,flags=re.S):
+    global h
+    n=len(re.findall(pat,h,flags))
+    if n!=1:miss.append(f'REGEX {n}: '+pat[:80]);return
+    h=re.sub(pat,lambda m:y,h,flags=flags)
+
+# ---- moods: Fröhlix has no fish; his proudest face is "proud as a pretzel" = delighted
+rep(",fish:'proud and triumphant, like a cat with its catch: the student nailed a tricky one or is on a streak'}","}")
+rep("const GREET_MOODS=['happy','delighted','cheeky','sly','fish'];","const GREET_MOODS=['happy','delighted','cheeky','sly'];")
+rep("const REACT_MOODS={ok:['happy','delighted','adoring','fish','laughing'],","const REACT_MOODS={ok:['happy','delighted','adoring','laughing'],")
+rep("{face:'fish',say:'{¡Muy bien!|very good!} You’re all set.","{face:'delighted',say:'{Sehr gut!|very good!} You’re all set.")
+rep("$('onbFelix').src=onbFace('fish')","$('onbFelix').src=onbFace('delighted')")
+rep("mock-grumpy about Spanish irregular verbs or about being asked for the answer outright","mock-grumpy about German noun genders and adjective endings, or about being asked for the answer outright")
+
+# ---- the grader
+rex(r"const t=await aiChat\(\[\{role:'system',content:'You grade Spanish translation exercises.*?'\+\n",
+"""const t=await aiChat([{role:'system',content:'You grade German translation exercises for a high school student. The reference answer is known to be correct. Mark the student correct only if their sentence means the same as the reference: same subject, person, number, tense, mood, and same objects. Accept any valid phrasing, synonym or natural word order: German allows other correct orders (for example a time expression first, then the verb, then the subject: Heute spiele ich Fußball = Ich spiele heute Fußball), and in English to German any correct order is fine as long as the conjugated verb is in second position in a main clause and at the end of a subordinate clause. Accept either English article, contractions (im = in dem, zum = zu dem), ae, oe, ue and ss for ä, ö, ü and ß, and normal variants (Handy or Mobiltelefon, Fahrrad or Rad). In English, the German present can be the English simple present or progressive, and the German Perfekt can be the English simple past or present perfect. Ignore punctuation. Capital letters: if a German noun is not capitalized, the answer is still correct, but say so in the reason; Sie (formal you) versus sie (they, she) and Ihr versus ihr are different words, so a wrong capital there makes it wrong. A missing umlaut does not make an answer wrong unless it turns the word into a different word or form (schon versus schön, hatte versus hätte, wurde versus würde, Mutter versus Mütter, fahrt versus fährt); in that case it is wrong. Forgive obvious spelling typos (swapped, missing, doubled or extra letters) when the intended word is clear and the slip does not create a different real word or a different grammatical form; still mark it correct and name the typo in the reason. A wrong case, gender, article, adjective ending, verb ending, tense, person or helping verb (haben versus sein) is never a typo: der Hund for den Hund, mit den Mann, ich habe gegangen, ein gute Buch are wrong. A verb in the wrong position (not second in a main clause, not last after weil, dass, wenn or a relative pronoun) is wrong, and so is a separable prefix left attached in a main clause (ich anrufe ihn). '+
+""")
+rep("'In the reason, mark every Spanish word or phrase as {Spanish|short English meaning}, for example {comió|ate (he/she)}. Reply only with JSON, with the keys in this order: {\"compare\": \"very short word-by-word check, e.g. comio=comió accent only ok; libros~libro wrong number\", \"correct\": true or false, \"reason\": \"one short sentence for the student\"}.'},",
+    "'In the reason, mark every German word or phrase as {German|short English meaning}, for example {den Hund|the dog (accusative)}. Reply only with JSON, with the keys in this order: {\"compare\": \"very short word-by-word check, e.g. Backerei=Bäckerei umlaut only ok; der~den wrong case\", \"correct\": true or false, \"reason\": \"one short sentence for the student\"}.'},")
+rep("content:`Direction: ${c.e2l?'English to Spanish':'Spanish to English'}","content:`Direction: ${c.e2l?'English to German':'German to English'}")
+
+# ---- persona and chat
+rex(r'const PERSONA="You are Felicísimo.*?";\n',
+'''const PERSONA="You are Fröhlix, the cheerful cat mascot of Wörter, a German practice site. You are the German cousin of Fēlix, the Latin cat of Verba (Fēlix means lucky and happy, and Fröhlix comes from fröhlich, cheerful). You wear a green alpine hat and always have a pretzel nearby. Be warm, encouraging and a little playful, with the occasional light cat pun, but keep every explanation accurate, clear and short. You always choose the expression Fröhlix shows, as \\"mood\\", from this list: "+Object.entries(MOODS).map(([k,v])=>k+' ('+v+')').join(', ')+". You may sprinkle in a German word or short phrase now and then, playfully or in context (for example Hallo!, Sehr gut!, Super!, Achtung!, Keine Panik!). Mark EVERY German word or phrase in your reply text, including words quoted from the exercise, right where it appears, as {German|short English meaning}, for example: {Sehr gut!|very good!}, the ending of {den Hund|the dog} shows the accusative, and {ich bin gegangen|I went} uses sein because it is movement. Mark each German word or phrase separately, keep the German inside the braces exactly as you want it shown (with umlauts and capital letters on nouns), and never put quotation marks, braces or a | inside the English part. Do not mark English words, and do not use this markup in any other JSON field. Before the student has submitted, give only a word's general dictionary meaning in the English part, never its translation within the exercise or which form it takes in it. ";
+''')
+rex(r'const GREETINGS=\[.*?\];\n',
+'''const GREETINGS=["{Hallo!|hello!} I'm {Fröhlix|my name (from fröhlich, cheerful)}. Stuck on a case? Ask me anything about the grammar.","{Willkommen!|welcome!} Curiosity never hurt this cat. What would you like to know?","Nine lives, and I've spent every one of them learning der, die, das. Ask away!","Purr-haps a question about the accusative? I'm all ears (both of them).","My cousin Fēlix does Latin. I do German. Ask me anything!","Tip from a wise cat: ask about the rules, not the answer, and your score stays safe.","Need a paw with this one? General grammar questions are always free.","{Achtung!|watch out!} An umlaut can change a word: {schön|beautiful} is not {schon|already}.","{Hallo, Freund!|hello, friend!} Ready to {schreiben|to write} some German?","{Keine Panik!|don't panic!} Questions about grammar are always welcome."];
+''')
+rex(r'const THINKING=\[.*?\];\n',
+'''const THINKING=["{Fröhlix|my name} is flipping through the dictionary","Sharpening claws on the dative","Asking the other cats in the {Biergarten|beer garden}","Chasing a separable prefix to the end of the sentence","Counting adjective endings very carefully","Checking with {der Duden|the German dictionary}","Pawing through the article charts","Napping on it for a second","{Moment mal…|just a moment} whiskers twitching","{Langsam, aber sicher|slowly but surely}: checking carefully","Nibbling a {Brezel|pretzel} while I think"];
+''')
+rex(r'const LEAD_RULES=\{.*?\n \};?\n|const LEAD_RULES=\{.*?"\};\n',
+'''const LEAD_RULES={
+ I:"This is a German I exercise, so be LIGHT about what counts as leading; beginners are expected to ask lots of questions about forms. NOT leading (judge as fine): how a verb conjugates or how an article or noun changes, including a word from this sentence, when the student names the form they want or proposes it themselves (for example 'is the du form of fahren fährst?' or 'Hund is masculine, so is the accusative den Hund?'); confirming the student's own reasoning about an ending, gender, case or umlaut; general grammar; what a case or word order rule does; vocabulary meanings, including a noun's gender; how to approach the sentence. TOO leading only if the student asks you to: give the answer or translate any part of the sentence; decide which person, case, gender or number a word needs in THIS sentence (the choice itself, not the form once chosen); decide the word order of THIS sentence; or check, correct, confirm or fill in their draft.",
+ II:"This is a German II exercise, so be MODERATE about what counts as leading. NOT leading: how a verb conjugates or an article declines when the student names the form or proposes it themselves; confirming the student's own reasoning about a paradigm; general grammar, including the general rules for the dative, two-way prepositions and haben versus sein; vocabulary meanings and genders; how to approach the sentence. TOO leading: asking for the answer or any part of the translation; asking which case, article, helping verb or word order THIS sentence needs; asking for a form of a word in the sentence without naming which form; or asking you to check, correct, confirm or fill in their draft.",
+ III:"This is a German III exercise, so be FIRM about what counts as leading; students should know their forms. NOT leading: general grammar, how a construction works in general (for example where the verb goes after weil, or how adjective endings work), vocabulary meanings and genders, how to approach the sentence. TOO leading: asking for the answer or any part of the translation; asking for or confirming any specific form or ending of a word from this sentence; asking which case, tense or word order THIS sentence needs; or asking you to check, correct, confirm or fill in their draft.",
+ IV:"This is a German IV exercise, so be FIRM about what counts as leading; students should know their forms. NOT leading: general grammar, how a construction works in general, vocabulary meanings. TOO leading: asking for the answer or any part of the translation; asking for or confirming any specific form of a word from this sentence; asking which mood, tense, case or construction anything in this sentence needs; or asking you to check, correct, confirm or fill in their draft.",
+ AP:"This is an AP German Language exercise, so be STRICT about what counts as leading. NOT leading: general grammar and vocabulary meanings. TOO leading: anything that resolves part of this specific exercise, including any form, case, ending, mood, tense, word order or translation of something in it, or checking, correcting, confirming or filling in their draft."};
+''')
+rep("You are tutoring a high school Spanish student.","You are tutoring a high school German student.")
+rep("${q.mode==='id'?'identify the use (of ser, estar, por, para, the preterite, the imperfect or the subjunctive) that a highlighted Spanish word shows':q.form?'write one verb form':c.e2l?'translate English into Spanish':'translate Spanish into English'}",
+    "${q.mode==='id'?'identify which use of a case (nominative, accusative, dative or genitive) a highlighted German phrase shows':q.form?'write one verb form':c.e2l?'translate English into German':'translate German into English'}")
+rep("src:q.latin+` (which use of ${USES[ty.c].word} is \"${phraseOf(q,q.idTok)}\"?)`","src:q.latin+` (which use of ${USES[ty.c].word} is \"${phraseOf(q,q.idTok)}\"?)`")
+
+# ---- onboarding
+rep("{face:'delighted',say:'{¡Hola!|hello!} I’m {Felicísimo|super happy (my name; feliz means happy)}, your Spanish tutor cat and Fēlix’s cousin. Let’s get you set up. It takes about 5 minutes.',",
+    "{face:'delighted',say:'{Hallo!|hello!} I’m {Fröhlix|my name (from fröhlich, cheerful)}, your German tutor cat and Fēlix’s cousin. Let’s get you set up. It takes about 5 minutes.',")
+rep("<h2 id=\"onbTitle\">Practice Spanish sentences, one at a time</h2>","<h2 id=\"onbTitle\">Practice German sentences, one at a time</h2>")
+rep("translate sentences between English and Spanish, and earn XP","translate sentences between English and German, and earn XP")
+rep("One thing first: Palabras needs a free AI key to work. (Already use Verba for Latin? Your key and account work here too.)","One thing first: Wörter needs a free AI key to work. (Already use Verba for Latin or Palabras for Spanish? Your key and account work here too.)")
+rep("I have a Verba or Palabras account: log in","I have a Verba, Palabras or Wörter account: log in")
+rep("<li>Hover over (or tap) a Spanish word with a dotted underline to see what it means.</li>","<li>Hover over (or tap) a German word with a dotted underline to see what it means.</li>")
+rep("<li>Type accents with the buttons, or type ' after a vowel (a' → á) and ~ after n (n~ → ñ).</li>","<li>Type umlauts with the buttons, or type : after a vowel (a: → ä). Writing ae, oe, ue and ss counts as correct too.</li>")
+rep("<li>Ask me anything in <b>Ask Felicísimo</b>.","<li>Ask me anything in <b>Ask Fröhlix</b>.")
+rep("Log in and I’ll bring back your XP, streak and settings. Verba accounts work here too.","Log in and I’ll bring back your XP, streak and settings. Verba and Palabras accounts work here too.")
+
+# ---- typing umlauts: a: → ä (and a" too); ß from s:
+rep('''const MAC={"a'":'á',"e'":'é',"i'":'í',"o'":'ó',"u'":'ú',"A'":'Á',"E'":'É',"I'":'Í',"O'":'Ó',"U'":'Ú',"a´":'á',"e´":'é',"i´":'í',"o´":'ó',"u´":'ú',"n~":'ñ',"N~":'Ñ','u"':'ü','U"':'Ü'};''',
+    '''const MAC={'a:':'ä','o:':'ö','u:':'ü','A:':'Ä','O:':'Ö','U:':'Ü','a"':'ä','o"':'ö','u"':'ü','A"':'Ä','O"':'Ö','U"':'Ü','s:':'ß'};''')
+
+# ---- feedback: umlauts instead of accents; capital letters; the site's own explanation
+rep("<b class=\"mac\">but check the accents.</b> You wrote","<b class=\"mac\">but check the umlauts.</b> You wrote")
+rep("<b class=\"bad\">Incorrect: the accent mark matters here.</b>","<b class=\"bad\">Incorrect: the umlaut matters here.</b>")
+rep("else if(r.ok)li=`<li class=\"mac\"><b class=\"ok\">Correct</b>, <b class=\"mac\">but check the accents.</b> With every accent mark: ${model}</li>`;",
+    "else if(r.ok&&r.caps)li=`<li class=\"mac\"><b class=\"ok\">Correct</b>, <b class=\"mac\">but German nouns start with a capital letter:</b> <span class=\"la\">${esc(r.caps.join(', '))}</span>. ${model}</li>`;\n  else if(r.ok)li=`<li class=\"mac\"><b class=\"ok\">Correct</b>, <b class=\"mac\">but check the umlauts.</b> With every umlaut: ${model}</li>`;")
+rep("else if(r.essential)li=`<li class=\"bad\"><b class=\"bad\">Incorrect: an accent mark matters here.</b> <span class=\"la\">${esc(r.essential.join(', '))}</span> is a different form. The answer is ${model}</li>`;",
+    "else if(r.essential&&r.formal)li=`<li class=\"bad\"><b class=\"bad\">Incorrect: the capital letter matters here.</b> <span class=\"la\">${esc(r.essential.join(', '))}</span> means “they” or “she”; formal “you” is <span class=\"la\">Sie</span>, with a capital S. The answer is ${model}</li>`;\n  else if(r.essential)li=`<li class=\"bad\"><b class=\"bad\">Incorrect: the umlaut matters here.</b> <span class=\"la\">${esc(r.essential.join(', '))}</span> is a different word or form. The answer is ${model}</li>`;")
+rep("else li=`<li class=\"bad\"><b class=\"bad\">${r.empty?'No answer given.':'Incorrect.'}</b>${why}${why?'<br>':' '}One correct answer: ${model}${order}${r.empty?'':'<br><button class=\"btn quiet\" id=\"override\">Count my answer as correct</button>'}</li>`;",
+    "else{const notes=e2l&&!r.empty?explainDE(q,inp.value):[];li=`<li class=\"bad\"><b class=\"bad\">${r.empty?'No answer given.':'Incorrect.'}</b>${why}${why?'<br>':' '}One correct answer: ${model}${order}${notes.length?'<ul class=\"why\">'+notes.map(n=>'<li>'+n+'</li>').join('')+'</ul>':''}${r.empty?'':'<br><button class=\"btn quiet\" id=\"override\">Count my answer as correct</button>'}</li>`;}")
+open(p,'w',encoding='utf-8').write(h)
+print('\n'.join('MISS '+m for m in miss) or 'all applied')

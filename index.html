@@ -3206,7 +3206,7 @@ async function checkT(){
   if(q.leaked&&r.ok)li=`<li class="mac"><b class="mac">Correct, but not counted.</b> Your answer was right, but a question you asked before answering was too leading, so this one doesn't count toward your score.${why} ${model}</li>`;
   else if(q.leaked){li=li.replace(/<br><button class="btn quiet" id="override">[^<]*<\/button>/,'');li+=`<li class="bad"><b class="bad">This sentence also counts as wrong</b> because one of your questions before answering was too leading.</li>`;}
   $('feedback').innerHTML=li;checked=true;$('check').textContent='Next sentence';$('check').focus();score();renderChat();
-  const o=$('override');if(o)o.addEventListener('click',()=>{stats.right++;stats.streak=prev+1;o.remove();award();react('ok');score()});
+  const o=$('override');if(o)o.addEventListener('click',()=>{stats.right++;stats.streak=prev+1;o.remove();react('ok');score()});
   addXC();if(!q.xc)showTopic();
 }
 $('qbody').addEventListener('click',e=>{

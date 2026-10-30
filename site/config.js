@@ -70,23 +70,23 @@ const RANK_INFO=['Every German speaker starts here.','Learning the basics, one v
 const BADGES=(r,place,wplace,lv,best)=>[['laurel-crown','Kranz','wreath','Completed AP German',r.course==='AP+'],['trophy','Wochensieger','champion of the week','#1 on this week’s leaderboard',wplace===1],['trophy','Siegertreppchen','podium','Top 3 of all time',place>0&&place<=3],
     ['castle','Plauderer','chatterbox','Reached Level 5',lv>=5],['castle','Meister','master','Reached Level 9',lv>=9],['laurel-crown','Legende','legend','Reached Level 10',lv>=10],
     ['fluffy-flame','Drei Tage','three days','A 3-day streak',best>=3],['fluffy-flame','Eine Woche','one week','A 7-day streak',best>=7],['fluffy-flame','Ein Monat','one month','A 30-day streak',best>=30],['fluffy-flame','Hundert Tage','a hundred days','A 100-day streak',best>=100],
-    ['round-star','Mil','a thousand','1,000 XP',r.xp>=1000],['round-star','Diez mil','ten thousand','10,000 XP',r.xp>=10000]];
+    ['round-star','Tausend','a thousand','1,000 XP',r.xp>=1000],['round-star','Zehntausend','ten thousand','10,000 XP',r.xp>=10000]];
 /* ---------- profiles: animal names, pictures and banners ---------- */
-const ANIMALS=[['Lobo','wolf'],['Zorro','fox'],['Oso','bear'],['Águila','eagle'],['León','lion'],['Caballo','horse'],['Cuervo','raven'],['Paloma','dove'],['Delfín','dolphin'],['Ciervo','stag'],['Búho','owl'],['Toro','bull'],['Liebre','hare'],['Ganso','goose'],['Gato','cat'],['Abeja','bee']];
+const ANIMALS=[['Wolf','wolf'],['Fuchs','fox'],['Bär','bear'],['Adler','eagle'],['Löwe','lion'],['Pferd','horse'],['Rabe','raven'],['Taube','dove'],['Delfin','dolphin'],['Hirsch','stag'],['Eule','owl'],['Stier','bull'],['Hase','hare'],['Gans','goose'],['Katze','cat'],['Biene','bee']];
 /* Profile pictures: freely licensed photos from Wikimedia Commons (credits are loaded live from Commons), or your own upload. */
 const PICS=[
-  {id:'cervantes',n:'Miguel de Cervantes',g:'fig',f:['Cervates jauregui.jpg','Cervantes Jáuregui.jpg','Miguel de Cervantes.jpg'],pos:'50% 25%'},
-  {id:'frida',n:'Frida Kahlo',g:'fig',f:['Frida Kahlo, by Guillermo Kahlo.jpg','Frida Kahlo, by Guillermo Kahlo 2.jpg'],pos:'50% 20%'},
-  {id:'bolivar',n:'Simón Bolívar',g:'fig',f:['Simón Bolívar 2.jpg','Simon Bolivar.jpg'],pos:'50% 25%'},
-  {id:'velazquez',n:'Diego Velázquez',g:'fig',f:['Diego Velázquez Autorretrato 45 x 38 cm - Colección Real Academia de Bellas Artes de San Fernando.jpg','Autorretrato de Diego Velázquez.jpg'],pos:'50% 30%'},
-  {id:'sorjuana',n:'Sor Juana Inés de la Cruz',g:'fig',f:['Juana Inés de la Cruz.jpg','Sor Juana Inés de la Cruz (Miguel Cabrera).jpg'],pos:'50% 25%'},
-  {id:'goya',n:'Francisco de Goya',g:'fig',f:['Vicente López Portaña - el pintor Francisco de Goya.jpg'],pos:'50% 25%'},
-  {id:'quijote',n:'Don Quijote',g:'fig',f:['Honoré Daumier 017.jpg','Don Quijote and Sancho Panza.jpg'],pos:'50% 40%'},
-  {id:'alhambra',n:'The Alhambra',g:'place',f:['Dawn Charles V Palace Alhambra Granada Andalusia Spain.jpg','Alhambra - Granada.jpg'],pos:'50% 50%'},
-  {id:'sagrada',n:'Sagrada Família',g:'place',f:['Σαγράδα Φαμίλια 2941.jpg','Sagrada Familia 01.jpg'],pos:'50% 40%'},
-  {id:'machupicchu',n:'Machu Picchu',g:'place',f:['Machu Picchu, Peru.jpg','80 - Machu Picchu - Juin 2009 - edit.jpg'],pos:'50% 50%'},
-  {id:'chichen',n:'Chichén Itzá',g:'place',f:['Chichen Itza 3.jpg','Chichen-Itza-Castillo-Seen-From-East.JPG'],pos:'50% 50%'},
-  {id:'plazamayor',n:'Plaza Mayor, Madrid',g:'place',f:['Plaza Mayor de Madrid 06.jpg','Plaza Mayor (Madrid) 01.jpg'],pos:'50% 50%'},
-  {id:'teotihuacan',n:'Teotihuacan',g:'place',f:['Teotihuacan Pyramid of the Sun.jpg','Pirámide del Sol, Teotihuacán.jpg'],pos:'50% 50%'},
-  {id:'havana',n:'Old Havana',g:'place',f:['Havana - Cuba - 0890.jpg','La Habana Vieja.jpg'],pos:'50% 50%'}];
-const BANNERS=[['c:red','#B23A26','Rojo'],['c:gold','#C8901A','Oro'],['c:blue','#2D5193','Azul talavera'],['c:green','#3F7A3A','Verde'],['c:purple','#6B2D5C','Morado'],['c:stone','#8C8273','Piedra']];
+  {id:'goethe',n:'Johann Wolfgang von Goethe',g:'fig',f:['Goethe (Stieler 1828).jpg'],pos:'50% 25%'},
+  {id:'beethoven',n:'Ludwig van Beethoven',g:'fig',f:['Joseph Karl Stieler\'s Beethoven mit dem Manuskript der Missa solemnis.jpg','Beethoven.jpg'],pos:'50% 20%'},
+  {id:'mozart',n:'Wolfgang Amadeus Mozart',g:'fig',f:['Croce-Mozart-Detail.jpg','Wolfgang-amadeus-mozart 1.jpg'],pos:'50% 25%'},
+  {id:'bach',n:'Johann Sebastian Bach',g:'fig',f:['Johann Sebastian Bach.jpg','Bach.jpg'],pos:'50% 25%'},
+  {id:'einstein',n:'Albert Einstein',g:'fig',f:['Einstein 1921 by F Schmutzer - restoration.jpg','Albert Einstein Head.jpg'],pos:'50% 25%'},
+  {id:'clara',n:'Clara Schumann',g:'fig',f:['Clara Schumann 1878.jpg'],pos:'50% 25%'},
+  {id:'durer',n:'Albrecht Dürer',g:'fig',f:['Albrecht Dürer - 1500 self-portrait (High resolution and detail).jpg'],pos:'50% 25%'},
+  {id:'neuschwanstein',n:'Schloss Neuschwanstein',g:'place',f:['Schloss Neuschwanstein 2013.jpg','Neuschwanstein Castle LOC print.jpg'],pos:'50% 50%'},
+  {id:'brandenburg',n:'Brandenburger Tor',g:'place',f:['Brandenburger Tor abends.jpg','Brandenburger Tor 2009.jpg'],pos:'50% 50%'},
+  {id:'koelnerdom',n:'Kölner Dom',g:'place',f:['Kölner Dom.jpg','Cologne Cathedral.jpg'],pos:'50% 40%'},
+  {id:'schoenbrunn',n:'Schloss Schönbrunn, Wien',g:'place',f:['Schloss Schönbrunn Wien 2014 (Zuschnitt 2).jpg','Schönbrunn Palace.jpg'],pos:'50% 50%'},
+  {id:'matterhorn',n:'Matterhorn',g:'place',f:['Matterhorn from Domhütte - 2.jpg','3818 - Riffelberg - Matterhorn viewed from Gornergratbahn.JPG'],pos:'50% 50%'},
+  {id:'heidelberg',n:'Heidelberg',g:'place',f:['Heidelberg corr.jpg'],pos:'50% 50%'},
+  {id:'rothenburg',n:'Rothenburg ob der Tauber',g:'place',f:['Rothenburg BW 2.JPG'],pos:'50% 50%'}];
+const BANNERS=[['c:red','#B23A26','Rot'],['c:gold','#C8901A','Gold'],['c:blue','#2D5193','Blau'],['c:green','#3F7A3A','Grün'],['c:purple','#6B2D5C','Lila'],['c:stone','#8C8273','Stein']];

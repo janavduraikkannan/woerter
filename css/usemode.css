@@ -1,0 +1,6 @@
+/* Identify-the-use tab and the "Mark my answer as correct" button */
+#paneUses .intro{margin:16px 0 0;color:var(--muted);max-width:62ch}
+#paneUses .intro b{color:var(--ink)}
+#useLevels .level h2{margin-bottom:8px}
+.markok{margin-top:8px}
+.markok+.hint{margin-left:6px}

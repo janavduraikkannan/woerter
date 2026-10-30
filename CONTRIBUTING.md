@@ -28,7 +28,7 @@ Thanks for wanting to help! Wörter is a personal project run by one student, so
    - **Respect privacy.** Don't add tracking, analytics, ads or new ways of collecting information. Any change to what Wörter stores must update [PRIVACY.md](PRIVACY.md).
    - **Credit and license any outside artwork or code**, and use only things you're allowed to share.
    - Topics and expected answers should match how the course teaches them.
-5. Changes to `firestore.rules` affect everyone's accounts on both Wörter and Verba, so they get extra careful review and may simply not be accepted.
+5. The Firestore security rules live only in [`firestore.rules` in the linguae repository](https://github.com/janavduraikkannan/linguae/blob/main/firestore.rules). Changes to them affect everyone's accounts on both Wörter and Verba, so they get extra careful review and may simply not be accepted.
 
 By submitting a pull request, you confirm the work is yours to share and you agree it can be used in Wörter under whatever license the owner chooses.
 

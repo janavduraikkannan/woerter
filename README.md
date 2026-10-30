@@ -36,9 +36,11 @@ Wörter is a static website hosted on GitHub Pages, with no server and no build 
 | Path | What it is |
 | --- | --- |
 | `index.html` | The whole app: the German sentence engine, answer checker, interface and account code |
+| `js/usemode.js` | The identify-the-use tab: choosing which uses to drill, AI grading for typed uses, and "Mark my answer as correct". New features go in their own files like this one and are linked from `index.html` |
+| `css/usemode.css` | Styles for the identify-the-use tab |
+| Firestore rules | Kept only in [`firestore.rules` in the linguae repository](https://github.com/janavduraikkannan/linguae/blob/main/firestore.rules). The German leaderboard (`boardde`) rules must be published in the Firebase console before it can save |
 | `getkey.html` | Guide to getting a free Groq key |
 | `keys.html` | Every AI provider that works, with free limits |
-| `firestore.rules` | Security rules shared with Verba and Palabras: accounts, every leaderboard (the German one is `boardde`), usernames and password logins. The `boardde` rules must be published in the Firebase console before the German leaderboard can save. |
 | `img/frohlix/` | Fröhlix, in every mood (drawn by Linguae's `tools/rig.py`) |
 | `img/icons/` | Interface icons |
 | `media/` | The key tutorial video, its captions and poster |

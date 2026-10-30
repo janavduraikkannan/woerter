@@ -636,6 +636,8 @@ dialog.acct .warnbox ul{margin:4px 0 0;padding-left:18px}dialog.acct .warnbox li
     </div>
     <div id="paneUses" hidden>
     <p class="intro">Each sentence highlights one word or phrase. Name the use it shows: type it, or switch to multiple choice. The topic label won't give it away. <span id="useXP"></span></p>
+    <p class="langpick" id="useLang"></p>
+    <p class="legend" id="useLegend" hidden><span><span class="sw"></span>Shaded uses are already covered in your class notes.</span><button id="pickTaughtUses">Select only the shaded uses</button></p>
     <div class="levels" id="useLevels"></div>
     </div>
   </main>
@@ -1796,6 +1798,7 @@ if(typeof module!=='undefined')module.exports={setLimit,makeBuilt,makeFocused,ma
 
 </script>
 <script src="js/usemode.js"></script>
+<script src="js/moreuses.js"></script>
 
 <script>
 /* ===================== UI ===================== */
@@ -3086,7 +3089,7 @@ function latinMarked(qq,tok){
 }
 function pickXC(qq){
   if(!qq||qq.choice||!qq.tokens)return null;
-  const c=qq.tokens.filter(t=>t.cids&&TY(t.cids[0]));if(!c.length)return null;
+  const c=qq.tokens.filter(t=>t.cids&&TY(t.cids[0])&&!XC_SKIP(t,qq));if(!c.length)return null;
   const pref=qq.topic&&ID_TOPIC[qq.topic.id],a=pref&&c.find(t=>pref.includes(TY(t.cids[0])));if(a)return a;
   return R(c);
 }
@@ -3094,10 +3097,11 @@ function makeIdentify(){
   const fromIds=ids=>[...new Set(ids.flatMap(t=>ID_TOPIC[t]||[]))];
   const ft=fromIds([...tFocus]);let types=tab==='uses'?[...uSel]:tab==='build'?[]:(ft.length?ft:fromIds([...selected]));
   if(!types.length)types=Object.keys(TYPES).filter(x=>!/^gen/.test(x)||[...selected].some(t=>/^gen/.test(t)));
-  for(let tries=0;tries<25;tries++){
-    const ty=R(types);ALT=[];let qq;try{qq=idQuestion(ty)}catch(e){continue}
+  for(let tries=0;tries<200;tries++){
+    const ty=R(types);ALT=[];let qq;try{qq=TYPES[ty].gen?TYPES[ty].gen():idQuestion(ty)}catch(e){continue}
     const tok=qq.tokens.find(t=>t.cids&&TY(t.cids[0])===ty);if(!tok)continue;
-    qq.idType=ty;qq.idTok=tok;qq.topic={id:'identify',level:{nom:'I',akk:'I',dat:'II',gen:'III'}[TYPES[ty].c],name:'Identify: uses of the '+USES[TYPES[ty].c].name.toLowerCase()};
+    qq.idType=ty;qq.idTok=tok;if(!useEnMark(qq))continue;qq.topic={id:'identify',level:{nom:'I',akk:'I',dat:'II',gen:'III'}[TYPES[ty].c],name:'Identify: uses of the '+USES[TYPES[ty].c].name.toLowerCase()};
+    qq.topic.level=TYPES[ty].level||USES[TYPES[ty].c].level||qq.topic.level||'I';
     return qq;
   }
   return makeQuestion(selected.size?selected:new Set(['nomakk']));
@@ -3112,7 +3116,7 @@ function buildUses(){
 function closeUses(){document.querySelectorAll('#usesBody details').forEach(d=>d.open=false)}
 function idBody(){
   const ty=TYPES[q.idType];
-  return`<p class="line" style="margin-top:0">${latinMarked(q,q.idTok)}</p><p class="english">Which use of ${USES[ty.c].word} is <mark class="la">${esc(phraseOf(q,q.idTok))}</mark>?</p>
+  return`${idHead(ty)}
   <input class="full" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type the use, like “location” or “purpose”" aria-label="The use">
   <div class="row idrow"><button type="button" class="btn quiet" id="idmc">Multiple choice (${XP_USE.mc} XP)</button><span class="hint" id="idnote"></span></div>
   <div class="choices" id="idch" hidden>${USES[ty.c].list.map(x=>`<button type="button" data-u="${x.id}">${esc(x.n)}</button>`).join('')}</div>`;
@@ -3122,7 +3126,7 @@ async function checkId(viaMC){
   if(busy)return;
   const inp=$('qbody').querySelector('input.full');let r=viaMC?{ok:viaMC===q.idType}:gradeUse(q.idType,inp.value),aiR=null,aiErr='';
   if(r.empty){$('feedback').innerHTML='<li class="mac">Type a use first, or choose <b>Multiple choice</b>.</li>';return}
-  if(r.vague){$('feedback').innerHTML=`<li class="mac"><b class="mac">Be more specific.</b> “${esc(inp.value.trim())}” fits more than one use of ${USES[TYPES[q.idType].c].word}. Try again.</li>`;return}
+  if(r.vague){$('feedback').innerHTML=`<li class="mac"><b class="mac">Be more specific.</b> “${esc(inp.value.trim())}” fits more than one ${useOf(TYPES[q.idType])}. Try again.</li>`;return}
   if(!viaMC&&!r.ok){const cur=q;busy=true;$('check').disabled=inp.disabled=true;moodTok++;setFelix('thinking');$('feedback').innerHTML=`<li>Checking with ${esc(aiName())}…</li>`;
     try{aiR=await aiGradeUse(q.idType,inp.value.trim(),q,q.idTok)}catch(e){aiErr=e.message||'the AI could not be reached'}
     busy=false;$('check').disabled=false;if(cur!==q)return;
@@ -3136,7 +3140,7 @@ async function checkId(viaMC){
   q.submitted=viaMC?ty.c+': '+(TYPES[viaMC]||{}).n:inp.value.trim();q.result=r.ok?'correct':'incorrect';react(counts?'ok':r.ok?'leak':'bad');
   const why=voided?`you opened the ${USES[ty.c].name} uses chart on this problem`:'a question you asked before answering was too leading';
   const head=counts?`<b class="ok">Correct${mc?', with multiple choice':''}.</b>`:r.ok?`<b class="mac">Correct, but not counted,</b> because ${why}.`:`<b class="bad">Not quite.</b>`;
-  $('feedback').innerHTML=`<li class="${counts?'ok':r.ok?'mac':'bad'}">${head} ${useLine(q,q.idTok,q.idType)}${aiNote(aiR,aiErr)}<br><small>The sentence means: ${esc(cap(q.en))}${q.end}</small>${!r.ok&&!mc&&!q.leaked?MARK_BTN:''}</li>`;
+  $('feedback').innerHTML=`<li class="${counts?'ok':r.ok?'mac':'bad'}">${head} ${useLine(q,q.idTok,q.idType)}${aiNote(aiR,aiErr)}${q.enMark?'':`<br><small>The sentence means: ${esc(enPlain(q))}</small>`}${!r.ok&&!mc&&!q.leaked?MARK_BTN:''}</li>`;
   $('check').textContent='Next sentence';$('check').focus();score();renderChat();
   wireMarkOk(()=>{stats.right++;score()});
 }
@@ -3156,7 +3160,7 @@ function renderXC(){
   const keep=$('xcin')?$('xcin').value:'';
   li.innerHTML=`<b>Extra credit</b> · ${voided?`<span class="bad">${cap(why)} on this problem, so this is practice only (no XP).</span>`:`<span class="hint">+${XP_USE.typed} XP, or +${XP_USE.mc} XP with multiple choice. Showing the topic or opening the ${cs.name} uses chart voids it.</span>`}
   <p class="line xcline">${latinMarked(q,x.tok)}</p>
-  <p>Which use of ${cs.word} is <mark class="la">${esc(phraseOf(q,x.tok))}</mark>?</p>
+  <p>${useAsk(ty)} <mark class="la">${esc(phraseOf(q,x.tok))}</mark>?</p>
   <div class="row"><input type="text" id="xcin" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type the use" aria-label="Extra credit answer"${x.mc?' disabled':''}><button type="button" class="btn quiet" id="xcgo"${x.mc?' hidden':''}>Check</button><button type="button" class="btn quiet" id="xcmc"${x.mc?' disabled':''}>Multiple choice (${XP_USE.mc} XP)</button></div>
   <div class="choices" id="xcch"${x.mc?'':' hidden'}>${cs.list.map(u=>`<button type="button" data-xu="${u.id}">${esc(u.n)}</button>`).join('')}</div><p id="xcmsg"></p>`;
   if($('xcin'))$('xcin').value=keep;
@@ -3168,7 +3172,7 @@ function renderXC(){
 async function xcCheck(viaMC){
   const x=q.xc;if(!x||x.done||x.busy)return;const ty=TYPES[x.id],cs=USES[ty.c];let aiR=null,aiErr='',r=viaMC?{ok:viaMC===x.id}:gradeUse(x.id,$('xcin').value);
   if(r.empty){$('xcmsg').textContent='Type a use first, or choose Multiple choice.';return}
-  if(r.vague){$('xcmsg').innerHTML=`<b class="mac">Be more specific:</b> that fits more than one use of ${cs.word}.`;return}
+  if(r.vague){$('xcmsg').innerHTML=`<b class="mac">Be more specific:</b> that fits more than one ${useOf(ty)}.`;return}
   if(!viaMC&&!r.ok){const cur=q,ans=$('xcin').value.trim();x.busy=true;$('xcin').disabled=$('xcgo').disabled=true;$('xcmsg').textContent=`Checking with ${aiName()}…`;
     try{aiR=await aiGradeUse(x.id,ans,q,x.tok)}catch(e){aiErr=e.message||'the AI could not be reached'}
     x.busy=false;if(cur!==q||x.done)return;if($('xcin'))$('xcin').disabled=$('xcgo').disabled=false;

@@ -4,3 +4,7 @@
 #useLevels .level h2{margin-bottom:8px}
 .markok{margin-top:8px}
 .markok+.hint{margin-left:6px}
+#paneUses .langpick{margin:12px 0 0;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+#paneUses .langpick label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.tablet .useen{font-size:1.3rem}
+.tablet .usetl{font-size:1.05rem;opacity:.85;margin-top:2px}

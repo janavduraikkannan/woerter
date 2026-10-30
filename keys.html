@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-title="AI keys for {name}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AI keys for Wörter</title>
+<script src="site/config.js"></script>
+<script src="js/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Figtree:wght@400;600;700;800&family=Gentium+Book+Plus:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" href="img/frohlix/happy.svg" type="image/svg+xml">
 <script>(function(){var t="light";try{if(localStorage.getItem("verba-theme")==="dark")t="dark";}catch(e){}document.documentElement.setAttribute("data-theme",t);})();</script>
 <style>
 :root{--latin:"Gentium Book Plus",Georgia,serif;--ui:"Figtree","Segoe UI",system-ui,sans-serif;--display:"Fraunces",Georgia,serif;box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
-  --bg:#ECE3D0;--surface:#F6F0E2;--ink:#2B241E;--muted:#6A5D4F;--line:#C9B998;--line2:#A8946E;--accent:#2D5193;--gold:#946A10;--wash:#E4D7BC;color-scheme:light}
+  --bg:#ECE3D0;--surface:#F6F0E2;--ink:#2B241E;--muted:#6A5D4F;--line:#C9B998;--line2:#A8946E;--gold:#946A10;--wash:#E4D7BC;color-scheme:light}
 :root[data-theme="dark"]{--bg:#1E1B17;--surface:#282420;--ink:#EFE6D4;--muted:#B5A892;--line:#4B4339;--line2:#14120F;--accent:#86B9B8;--gold:#DDB25A;--wash:#2F2A23;color-scheme:dark}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:18px;line-height:1.5}
@@ -34,8 +34,8 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--wash);pa
 <body>
 <div class="wrap">
 <header>
-  <img src="img/frohlix/sly.svg" alt="Fröhlix the cat" style="width:110px;float:right;margin:0 0 8px 12px">
-  <h1>AI keys that work with Wörter</h1>
+  <img data-s-attr="src=pageFace:sly;alt=catThe" style="width:110px;float:right;margin:0 0 8px 12px">
+  <h1>AI keys that work with <template data-s="name"></template></h1>
   <p>Any one of these unlocks the AI answer checking and the “Ask the AI” box. The free ones need no credit card; the paid ones at the bottom charge your own account a tiny amount per question. Paste the key on the start screen; the site reads the key’s first letters to tell which service it belongs to. Have more than one? Turn on <b>Advanced: several keys</b> to rank them, and the site falls back to the next key whenever one fails.</p>
 </header>
 
@@ -110,7 +110,7 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--wash);pa
 </section>
 
 <h2 style="font-family:var(--display);font-weight:600;font-size:1.9rem;margin:34px 0 0">Paid keys</h2>
-<p class="note" style="margin-top:4px">These need a card on file and bill you per use. Grading one answer or asking Fröhlix one question uses a small, fast model and costs a fraction of a cent. Set a monthly spending limit on the provider’s site so a key can never run up a surprise bill.</p>
+<p class="note" style="margin-top:4px">These need a card on file and bill you per use. Grading one answer or asking <template data-s="cat"></template> one question uses a small, fast model and costs a fraction of a cent. Set a monthly spending limit on the provider’s site so a key can never run up a surprise bill.</p>
 
 <section class="card">
   <h2>OpenAI (ChatGPT)</h2>
@@ -151,7 +151,8 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--wash);pa
 </section>
 
 <p class="note">Free limits change often; these were checked in October 2026. Unless you tick “Remember key(s) on this browser” or “Save key(s) to my account”, your keys stay in the open tab only. Saved keys are stored as plain text, so only tick those boxes on your own device. Treat a key like a password: don’t share it or post it anywhere.</p>
-<p><a href="./">← Back to Wörter</a></p>
+<p><a href="./">← Back to <template data-s="name"></template></a></p>
 </div>
+<script src="js/site-fill.js"></script>
 </body>
 </html>

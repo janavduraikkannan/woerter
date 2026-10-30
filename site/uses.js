@@ -1,7 +1,6 @@
 /* ---------- German: the rest of the course's form uses, for the identify-the-use tab ----------
-   Loaded after js/usemode.js. The Konjunktiv II uses start from the course's own k2 and k2wenn
+   Loaded after js/usemode.js (the language name, LANG_NAME, is in site/config.js). The Konjunktiv II uses start from the course's own k2 and k2wenn
    generators and tag the one verb that shows the use. */
-const LANG_NAME='German';
 const useAsk=ty=>`Which use of ${USES[ty.c].word} is`;
 const useOf=ty=>`use of ${USES[ty.c].word}`;
 const XC_SKIP=()=>false;

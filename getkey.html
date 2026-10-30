@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-title="Get your free AI key · {name}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Get your free AI key · Wörter</title>
+<script src="site/config.js"></script>
+<script src="js/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Figtree:wght@400;600;700;800&family=Gentium+Book+Plus:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" href="img/frohlix/happy.svg" type="image/svg+xml">
 <script>(function(){var t="light";try{if(localStorage.getItem("verba-theme")==="dark")t="dark";}catch(e){}document.documentElement.setAttribute("data-theme",t);})();</script>
 <style>
 :root{--latin:"Gentium Book Plus",Georgia,serif;--ui:"Figtree","Segoe UI",system-ui,sans-serif;--display:"Fraunces",Georgia,serif;box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
-  --bg:#ECE3D0;--surface:#F6F0E2;--ink:#2B241E;--muted:#6A5D4F;--line:#C9B998;--line2:#A8946E;--accent:#2D5193;--gold:#946A10;--wash:#E4D7BC;color-scheme:light}
+  --bg:#ECE3D0;--surface:#F6F0E2;--ink:#2B241E;--muted:#6A5D4F;--line:#C9B998;--line2:#A8946E;--gold:#946A10;--wash:#E4D7BC;color-scheme:light}
 :root[data-theme="dark"]{--bg:#1E1B17;--surface:#282420;--ink:#EFE6D4;--muted:#B5A892;--line:#4B4339;--line2:#14120F;--accent:#86B9B8;--gold:#DDB25A;--wash:#2F2A23;color-scheme:dark}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:18px;line-height:1.5}
@@ -42,16 +42,16 @@ video{width:100%;border-radius:8px;border:2px solid var(--line2);background:#111
 .tri h3{margin:0 0 4px;font-size:1.08rem}
 .tri ul{margin:4px 0 0;padding-left:20px}.tri li{margin:4px 0}
 .ok{border-top:6px solid #4A7A35!important}.maybe{border-top:6px solid #946A10!important}.no{border-top:6px solid #A93226!important}
-.btn{display:inline-block;background:#B23A26;color:#FFF6E8;font-weight:800;text-decoration:none;border-radius:10px;padding:10px 18px;box-shadow:3px 3px 0 var(--line2);margin:6px 10px 0 0}
+.btn{display:inline-block;background:var(--button);color:#FFF6E8;font-weight:800;text-decoration:none;border-radius:10px;padding:10px 18px;box-shadow:3px 3px 0 var(--line2);margin:6px 10px 0 0}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <img src="img/frohlix/delighted.svg" alt="Fröhlix the cat" style="width:110px;float:right;margin:0 0 8px 12px">
+  <img data-s-attr="src=pageFace:delighted;alt=catThe" style="width:110px;float:right;margin:0 0 8px 12px">
   <h1>Get your free AI key</h1>
-  <p>Wörter needs an AI key to check your sentences and to let Fröhlix answer your questions. Without one, practice can’t start. Getting a free key from Groq takes about 3 minutes, needs no credit card, and costs nothing.</p>
-  <p><a class="btn" href="https://groq.com" target="_blank" rel="noopener">Open groq.com</a><a href="index.html">← Back to Wörter</a></p>
+  <p><template data-s="name"></template> needs an AI key to check your sentences and to let <template data-s="cat"></template> answer your questions. Without one, practice can’t start. Getting a free key from Groq takes about 3 minutes, needs no credit card, and costs nothing.</p>
+  <p><a class="btn" href="https://groq.com" target="_blank" rel="noopener">Open groq.com</a><a href="index.html">← Back to <template data-s="name"></template></a></p>
 </header>
 
 <section class="card warn">
@@ -80,9 +80,9 @@ video{width:100%;border-radius:8px;border:2px solid var(--line2);background:#111
     <li>Type your personal email address in the box and click <b>Continue with email</b>. (You can also use <b>Continue with Google</b> if you have a personal Google account.)</li>
     <li>Open your email and find the message from Groq. Click the link inside it. This signs you in to Groq; there’s no password to remember. If you don’t see the email after a minute, look in your <b>Spam</b> or <b>Junk</b> folder.</li>
     <li>On Groq, click <b>API Keys</b> at the top of the page, then click <b>Create API Key</b>. If a “Verify you are human” check appears, wait a moment or tick the box.</li>
-    <li>Type any name for your key, like <b>Wörter</b>. Leave Expiration as <b>No expiration</b>. Click <b>Submit</b>.</li>
+    <li>Type any name for your key, like <b><template data-s="name"></template></b>. Leave Expiration as <b>No expiration</b>. Click <b>Submit</b>.</li>
     <li>Your key appears. It starts with <code>gsk_</code>. Click <b>Copy</b>. <b>Groq shows it only once</b>, so save it now (see below).</li>
-    <li>Click <b>Done</b>, go back to Wörter, and paste your key into the <b>AI API key</b> box: click the box, then press <b>Ctrl+V</b> (or <b>Cmd+V</b> on a Mac). Click <b>Start practice</b>.</li>
+    <li>Click <b>Done</b>, go back to <template data-s="name"></template>, and paste your key into the <b>AI API key</b> box: click the box, then press <b>Ctrl+V</b> (or <b>Cmd+V</b> on a Mac). Click <b>Start practice</b>.</li>
   </ol>
 </section>
 
@@ -96,12 +96,12 @@ video{width:100%;border-radius:8px;border:2px solid var(--line2);background:#111
   <h2>What’s private, and what isn’t</h2>
   <div class="tri">
     <section class="ok"><h3>Private</h3><ul>
-      <li>Your AI key, unless you choose to save it. Wörter has no server of its own: the key goes straight from your browser to the AI company.</li>
+      <li>Your AI key, unless you choose to save it. <template data-s="name"></template> has no server of its own: the key goes straight from your browser to the AI company.</li>
       <li>Without an account, your progress stays in your own browser.</li>
     </ul></section>
     <section class="maybe"><h3>Up to other companies</h3><ul>
-      <li>When an answer is checked or you ask Fröhlix something, the sentence, your answer and your question go to the AI company (Groq). What they keep is up to their privacy policy, not Wörter.</li>
-      <li>Your sign-up email goes to Groq, not to Wörter.</li>
+      <li>When an answer is checked or you ask <template data-s="cat"></template> something, the sentence, your answer and your question go to the AI company (Groq). What they keep is up to their privacy policy, not <template data-s="name"></template>.</li>
+      <li>Your sign-up email goes to Groq, not to <template data-s="name"></template>.</li>
       <li>The site is hosted by GitHub, and accounts are stored with Google Firebase.</li>
     </ul></section>
     <section class="no"><h3>Not private</h3><ul>
@@ -110,10 +110,11 @@ video{width:100%;border-radius:8px;border:2px solid var(--line2);background:#111
       <li>A key you save in your browser or account is stored as plain text.</li>
     </ul></section>
   </div>
-  <p class="note">Never type personal details (your address, phone number, passwords) into Fröhlix’s chat or your profile.</p>
+  <p class="note">Never type personal details (your address, phone number, passwords) into <template data-s="cat"></template>’s chat or your profile.</p>
 </section>
 
-<p><a href="index.html">← Back to Wörter</a> · <a href="keys.html">Other AI keys that work</a></p>
+<p><a href="index.html">← Back to <template data-s="name"></template></a> · <a href="keys.html">Other AI keys that work</a></p>
 </div>
+<script src="js/site-fill.js"></script>
 </body>
 </html>

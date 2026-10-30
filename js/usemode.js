@@ -1,11 +1,11 @@
 /* ---------- Identify-the-use tab: choose the uses to drill, English or target-language sentences, AI grading for typed uses ----------
-   Loaded from index.html between the engine and the main script, then js/moreuses.js adds each language's extra uses.
-   Nothing here runs on load; index.html calls buildUsePane() from buildStart(), usesSync() from sync(),
-   useEnMark() from makeIdentify(), idHead() from idBody(), and aiGradeUse() from checkId() and xcCheck(). */
+   Loaded from index.html right after site/engine.js, then site/uses.js adds each language's extra uses.
+   Nothing here runs on load; buildUsePane() is called from buildStart() and usesSync() from sync() (js/topics.js),
+   useEnMark() from makeIdentify() (site/language.js), idHead() from idBody(), and aiGradeUse() from checkId() and xcCheck() (js/identify.js). */
 const XP_USE={typed:3,mc:1}; // identify mode and extra credit both pay these, with no streak bonus, in either language
 const uSel=new Set();
 let useLang='tl'; // 'tl': sentences in the language being learned; 'en': English, with that language underneath
-/* moreuses.js calls this to add a use group, or more uses to an existing one */
+/* site/uses.js calls this to add a use group, or more uses to an existing one */
 function addUses(group,def,list){
   if(!USES[group])USES[group]=Object.assign({list:[]},def);
   list.forEach(x=>{USES[group].list.push(x);TYPES[x.id]=Object.assign(x,{c:group})});

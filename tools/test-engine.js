@@ -1,5 +1,5 @@
 // node tools/test-engine.js [samples per topic] [topic id]
-const E=require('./engine.js');const N=+process.argv[2]||200,only=process.argv[3];
+const E=require('../site/engine.js');const N=+process.argv[2]||200,only=process.argv[3];
 let bad=0;const show=+process.env.SHOW||3;
 for(const t of E.TOPICS){if(only&&t.id!==only)continue;const seen=[];let err=0;
   for(let i=0;i<N;i++){let q;try{q=E.makeQuestion(new Set([t.id]))}catch(e){err++;if(err<3)console.log('THROW',t.id,e.stack.split('\n').slice(0,3).join(' | '));continue}

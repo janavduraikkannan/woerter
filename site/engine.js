@@ -1086,3 +1086,4 @@ const latinOf=ts=>deJoin(ts);
 const vphrase=(v,t,p)=>{const x=verbToks(v,t,p);return[x.fin.la,...x.tail.map(y=>y.la)].join(' ')};
 const vf=(v,t,p)=>t==='pres'?presF(v,p):t==='praet'?praetF(v,p):t==='k2'?(k2F(v,p)||WURDE[p]+' '+v.inf):vphrase(v,t,p);
 if(typeof module!=='undefined')module.exports={setLimit,makeBuilt,makeFocused,makeQuestion,TOPIC_PLAN,FRAMES,ING_ALL,TOPICS,B,grade,gradeLatin,gradeEnglish,explainDE,idQuestion,USES,TYPES,VERBS,NOUNS,ADJ,vf,vphrase,finish,presF,praetF,vb,SPECIAL,deJoin,np,impF};
+

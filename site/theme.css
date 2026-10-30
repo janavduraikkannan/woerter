@@ -1,0 +1,9 @@
+/* Wörter's colours: the accent colours and level colours, light and dark. Everything else is in css/main.css. */
+:root{
+  --accent:#4F6B3A; --accent-ink:#FFF6E8; --accent-shadow:#2C3F20; --accent2:#8A4B14; --accent2-ink:#FFFFFF; --brand:#8A4B14;
+  --lv1:#B8861B; --lv2:#2D5193; --lv3:#4E7A2E; --lv4:#8E3B4F; --lv5:#B23A26;
+}
+:root[data-theme="dark"]{
+  --accent:#9DBB7E; --accent-ink:#1E1B17; --accent-shadow:#4A6236; --accent2:#E0A867; --accent2-ink:#1E1B17; --brand:#E0A867;
+  --lv1:#DDB25A; --lv2:#8FB0E6; --lv3:#9CC47F; --lv4:#D98B9C; --lv5:#E58A6E;
+}

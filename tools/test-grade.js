@@ -1,4 +1,4 @@
-const E=require('./engine.js');
+const E=require('../site/engine.js');
 const mk=(id)=>{for(;;){const q=E.makeQuestion(new Set([id]));if(!q.form)return q}};
 function tryA(q,ans,label){const g=E.gradeLatin(q,ans);const ex=g.ok?[]:E.explainDE(q,ans);console.log(`${label.padEnd(10)} ${q.display}  ⟵  "${ans}"  → ${JSON.stringify(g)}${ex.length?'\n           '+ex.join('\n           '):''}`)}
 for(let i=0;i<4;i++){const q=mk('nomakk');const w=q.display.replace(/\bden\b/,'der').replace(/\beinen\b/,'ein');if(w!==q.display)tryA(q,w,'case')}

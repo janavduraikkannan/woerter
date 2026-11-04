@@ -8,7 +8,7 @@ Part of **[Linguae](https://janavduraikkannan.github.io/linguae/)**, the home pa
 
 Wörter is the German sister site of [Verba](https://janavduraikkannan.github.io/verba/) (Latin) and [Palabras](https://janavduraikkannan.github.io/palabras/) (Spanish). It builds fresh German sentences from the topics you pick, then has you translate the whole sentence, English to German or German to English. It checks your answer, tells you exactly what went wrong (a wrong case or ending, a missing umlaut, the verb in the wrong place), and lets you ask Fröhlix, an AI tutor, questions about the grammar along the way.
 
-> **Privacy, in short:** Wörter has no server of its own. Your practice runs in your browser, your AI key goes straight from your browser to the AI company you chose, and nothing is saved anywhere else unless you make an account. If you do, your account and anything you put on the leaderboard are stored with Google Firebase, are **not encrypted**, and **are not private**. Read the full [Privacy Statement](https://github.com/janavduraikkannan/Verba/blob/main/PRIVACY.md) before making an account.
+> **Privacy, in short:** Wörter has no database server of its own. Your practice runs in your browser, and your AI requests and AI key go to the AI company you chose, through the Wörter relay (a small Cloudflare Worker that saves nothing; you can switch it off), and nothing is saved anywhere else unless you make an account. If you do, your account and anything you put on the leaderboard are stored with Google Firebase, are **not encrypted**, and **are not private**. Read the full [Privacy Statement](https://github.com/janavduraikkannan/Verba/blob/main/PRIVACY.md) before making an account.
 
 ## What it does
 

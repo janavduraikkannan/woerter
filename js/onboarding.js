@@ -2,12 +2,12 @@
 /* ---------- First-visit onboarding: the site's cat walks a new user through getting a free Groq key and (optionally) an account ---------- */
 const ONB_PRIV=`<div class="onbtri">
   <section class="ok"><h3>Private</h3><ul>
-    <li>Your AI key, unless you choose to save it. ${SITE.name} has no server of its own: the key goes straight from your browser to the AI company.</li>
+    <li>Your AI key, unless you choose to save it. ${SITE.name} never stores it: it goes from your browser to the AI company, passing through the ${SITE.name} relay (a small server on Cloudflare that saves nothing) unless you switch the relay off.</li>
     <li>Without an account, your progress stays in this browser only.</li></ul></section>
   <section class="maybe"><h3>Up to other companies</h3><ul>
     <li>When an answer is checked or you ask me something, the sentence, your answer and your question go to the AI company (Groq). What they keep is up to their privacy policy. ${SITE.name} can’t promise anything about it.</li>
     <li>The email you sign up with goes to Groq, not to ${SITE.name}.</li>
-    <li>GitHub hosts this site and Google Firebase stores accounts.</li></ul></section>
+    <li>GitHub hosts this site, Google Firebase stores accounts, and Cloudflare runs the relay. They may keep basic logs, like your IP address.</li></ul></section>
   <section class="no"><h3>Not private</h3><ul>
     <li>The leaderboard and anything you put in your profile can be seen by other people.</li>
     <li>Account data isn’t encrypted: anyone with your account key can open it, and the site’s owner can see it.</li>
@@ -50,7 +50,9 @@ const ONB=[
    <div class="row"><button class="btn quiet" type="button" id="onbCheck">Check my key</button><span class="msg" id="onbMsg"></span></div>
    <label class="chk"><input type="checkbox" id="onbSaved"${onb.saved?' checked':''}> I saved my key somewhere safe</label>
    <label class="chk"><input type="checkbox" id="onbRem"${keyRemB?' checked':''}> Remember my key on this browser</label>
-   <p class="hint">Only tick “Remember” on your own device, not on a shared or school computer. The key is stored as plain text in this browser.</p>`,next:'Next'},
+   <p class="hint">Only tick “Remember” on your own device, not on a shared or school computer. The key is stored as plain text in this browser.</p>
+   <label class="chk"><input type="checkbox" id="onbRelay"${relayOn()?' checked':''}> Send AI requests through the ${SITE.name} relay</label>
+   <p class="hint">The relay is a small server on Cloudflare that passes your requests and key to the AI company without saving them. It can help on networks that block AI sites. Untick it to send them straight from your browser instead.</p>`,next:'Next'},
  {face:'adoring',say:'Last thing, and it’s optional: an account keeps your XP and streak on every device.',skip:()=>{try{return!acctReady()}catch(e){return true}},
   body:()=>acct.key?`<p class="onbstep">Step 5 of 5 · Account (optional)</p><h2 id="onbTitle">You have an account</h2>
    ${onb.newAcct?`<p class="onbbig">Here’s your account key. Save it too, separately from your AI key. It’s the only way to sign in on another device.</p><div class="keybox">${esc(showKey(onb.newAcct))}</div><div class="row"><button class="btn quiet" type="button" id="onbACopy">Copy account key</button><span class="msg" id="onbAMsg"></span></div>`:'<p>This browser is already signed in.</p>'}
@@ -104,6 +106,7 @@ function onbKeyStep(){
   $('onbKey').addEventListener('input',()=>{onb.keyOk=false;msg('');onbNextState()});
   $('onbSaved').addEventListener('change',e=>{onb.saved=e.target.checked;onbNextState()});
   $('onbRem').addEventListener('change',e=>{keyRemB=e.target.checked;lsSet('verba-keys-browser',keyRemB);saveKeys();keysUI()});
+  $('onbRelay').addEventListener('change',e=>setRelay(e.target.checked));
   $('onbCheck').onclick=async()=>{
     const k=$('onbKey').value.trim().replace(/\s+/g,'');$('onbKey').value=k;
     if(!k){msg('Paste your key in the box first.','bad');return}
@@ -125,14 +128,15 @@ function onbAcctStep(){
 function onbLoggedIn(){onb.login=false;$('onbFelix').src=onbFace('delighted');
   if(slots.some(x=>x.key)){onb.keyOk=true;onbGo(ONB.length-2);$('onbSay').innerHTML=latH(TXT.helloAgain+' You’re logged in and your AI key came with your account. All set!')}
   else{onbGo(1);$('onbSay').innerHTML=latH('You’re logged in! Your account doesn’t have an AI key saved, so let’s get you one.')}}
-function onbDone(){lsSet(SITE.id+'-onboarded',true);if($('onb').open)$('onb').close()}
+function onbDone(){lsSet(SITE.id+'-onboarded',true);if(lsGet('verba-relay',null)===null)lsSet('verba-relay',relayOn());if($('onb').open)$('onb').close()}
 function openOnb(i=0){onb.keyOk=!!(slots[0].st&&slots[0].key);$('onb').showModal();onbGo(i);$('onbNext').focus()}
 function setupOnboarding(){
   $('onbNext').onclick=()=>{const st=ONB[onb.i];if(st.go)return st.go();if(onb.i>=ONB_LOGIN-1){onbDone();return}onbGo(onb.i+1)};
   $('onbBack').onclick=()=>{const st=ONB[onb.i];if(st.backTo!==undefined){onb.login=false;return onbGo(st.backTo)}onbGo(onb.i-1)};
   $('onbClose').onclick=()=>onbDone();
-  $('onb').addEventListener('close',()=>lsSet(SITE.id+'-onboarded',true));
+  $('onb').addEventListener('close',()=>{lsSet(SITE.id+'-onboarded',true);if(lsGet('verba-relay',null)===null)lsSet('verba-relay',relayOn())});
   $('kguide').addEventListener('click',()=>openOnb(0));
   // First visit: no key anywhere and not signed in.
   if(!lsGet(SITE.id+'-onboarded',false)&&!slots.some(x=>x.key)&&!acct.key)openOnb(0);
+  if(AI_RELAY&&lsGet('verba-relay',null)===null&&!$('onb').open)relayNotice();
 }

@@ -69,7 +69,23 @@ function keysUI(full){
 }
 
 /* the key bar, the advanced key list and its buttons */
+// The relay switch sits with the other key options; it is added here so every site's index.html stays the same.
+function relayUI(){const c=$('kRelay');if(c)c.checked=relayOn()}
+function setRelay(on){lsSet('verba-relay',!!on);relayUI();const n=document.querySelector('.knote[data-id="relay"]');if(n)n.remove()}
+function relayNotice(){
+  const box=$('knotes');if(!box||document.querySelector('.knote[data-id="relay"]'))return;
+  const el=document.createElement('div');el.className='knote';el.dataset.id='relay';el.setAttribute('role','status');
+  el.innerHTML=`<img src="${faceImg('happy')}" alt=""><div><b>New: the ${esc(SITE.name)} AI relay.</b> AI requests, including your AI key, now go through a small server run for ${esc(SITE.name)} (on Cloudflare), which passes them to the AI company without saving them. It can help on networks that block AI sites. You can switch it off any time under the key box.
+    <div class="row"><button class="kbtn" data-a="on">Keep it on</button><button class="kbtn" data-a="off">Turn it off</button></div></div>`;
+  el.querySelector('[data-a=on]').onclick=()=>setRelay(true);
+  el.querySelector('[data-a=off]').onclick=()=>{setRelay(false);toast('happy','The relay is off. AI requests now go straight from your browser to the AI company.')};
+  box.appendChild(el);
+}
 function setupKeys(){
+  if(!$('kRelay')&&$('kRemAl')){const l=document.createElement('label');l.id='kRelayl';
+    l.title='On: AI requests, with your key, pass through the '+SITE.name+' relay on Cloudflare, which saves nothing. Off: they go straight from your browser to the AI company.';
+    l.innerHTML='<input type="checkbox" id="kRelay"> Send AI requests through the '+esc(SITE.name)+' relay';$('kRemAl').after(l);
+    $('kRelay').addEventListener('change',e=>setRelay(e.target.checked));relayUI()}
   $('key').addEventListener('input',()=>{syncSimple();keysUI()});$('prov').addEventListener('change',()=>{syncSimple();keysUI()});
   $('kRemB').addEventListener('change',e=>{keyRemB=e.target.checked;lsSet('verba-keys-browser',keyRemB);saveKeys()});
   $('kRemA').addEventListener('change',e=>{keyRemA=e.target.checked;lsSet('verba-keys-account',keyRemA);try{pushNow()}catch(x){}});

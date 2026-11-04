@@ -16,6 +16,18 @@ const PROVIDERS={
 };
 // Anthropic accepts calls straight from a web page only with its explicit browser-access header.
 const aiHeaders=(P,key)=>P.native==='anthropic'?{'x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}:P.native==='gemini'?{'x-goog-api-key':key}:{Authorization:'Bearer '+key};
+/* AI relay: when it's on (the default, which the user can switch off), AI requests go through the sites' Cloudflare Worker
+   (source: relay/worker.js in the verba repo). It forwards the user's own key to the AI company and passes the reply back
+   unchanged, without saving either. If the relay itself fails, the request goes straight to the AI company instead. */
+const AI_RELAY='https://verba-relay.janav-durai.workers.dev';
+const relayOn=()=>!!AI_RELAY&&lsGet('verba-relay',true)!==false;
+async function aiFetch(url,opts={}){
+  if(relayOn()){
+    try{const r=await fetch(AI_RELAY+'/?u='+encodeURIComponent(url),opts);if(r.headers.get('X-Verba-Relay')!=='error')return r}
+    catch(e){if(e&&e.name==='AbortError')throw e}
+  }
+  return fetch(url,opts);
+}
 // Rank Gemini models: the always-newest Flash alias first, then stable Flash by version (newest first), then previews, then Flash-Lite.
 function geminiRank(ids){
   const ver=i=>parseFloat((i.match(/gemini-(\d+(?:\.\d+)?)/)||[,'0'])[1]);
@@ -25,12 +37,12 @@ function geminiRank(ids){
 async function tryProvider(id,key){
   const P=PROVIDERS[id],h=aiHeaders(P,key);
   const url=c=>/^https?:/.test(c)?c:P.base+c;
-  let r;try{r=await fetch(url(P.check||'/models'),{headers:h})}catch(e){throw new Error(`Couldn't reach ${P.name} from this page`)}
+  let r;try{r=await aiFetch(url(P.check||'/models'),{headers:h})}catch(e){throw new Error(`Couldn't reach ${P.name} from this page`)}
   if(r.status===401||r.status===403||r.status===400)throw new Error(`${P.name} did not accept that key`);
   if(!r.ok)throw new Error(`${P.name} returned error ${r.status}`);
   let ids=[];
   try{if(P.native==='gemini')ids=((await r.json()).models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')).map(m=>String(m.name).replace(/^models\//,''));
-    else if(P.listFromCheck)ids=P.listFromCheck(await r.json());else{const lr=(P.check&&!P.native)?await fetch(P.base+'/models',{headers:h}):r;ids=((await lr.json()).data||[]).map(m=>String(m.id).replace(/^models\//,''));}}catch(e){}
+    else if(P.listFromCheck)ids=P.listFromCheck(await r.json());else{const lr=(P.check&&!P.native)?await aiFetch(P.base+'/models',{headers:h}):r;ids=((await lr.json()).data||[]).map(m=>String(m.id).replace(/^models\//,''));}}catch(e){}
   if(P.freeOnly)ids=ids.filter(i=>i.endsWith(':free'));
   ids=ids.filter(i=>!P.skip.test(i));
   if(P.native==='gemini'){const c=geminiRank(ids);if(!c.includes(P.fallback))c.push(P.fallback);return{prov:id,model:c[0],cands:c.slice(1)}}
@@ -63,7 +75,7 @@ async function geminiChat(s,messages){
       const body={contents,generationConfig:cfg};if(sys)body.systemInstruction={parts:[{text:sys}]};
       // A model that hasn't answered in 20 seconds is treated as stuck, and the next model is tried.
       const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),20000);
-      let r;try{r=await fetch(P.base+'/models/'+encodeURIComponent(model)+':generateContent',{method:'POST',headers:{...aiHeaders(P,s.key),'Content-Type':'application/json'},body:JSON.stringify(body),signal:ac.signal})}
+      let r;try{r=await aiFetch(P.base+'/models/'+encodeURIComponent(model)+':generateContent',{method:'POST',headers:{...aiHeaders(P,s.key),'Content-Type':'application/json'},body:JSON.stringify(body),signal:ac.signal})}
       catch(e){clearTimeout(tm);if(e.name==='AbortError'){lastStatus=503;lastTxt='timed out';break}throw new Error(P.name+' could not be reached')}
       clearTimeout(tm);
       if(r.ok){const j=await r.json(),t=(((j.candidates||[])[0]||{}).content?.parts||[]).filter(x=>!x.thought&&x.text).map(x=>x.text).join('');
@@ -94,7 +106,7 @@ async function chatWith(s,messages,retry=true,temp=true){
   else if(P.native){body={model:s.st.model,max_tokens:1024,messages:messages.filter(m=>m.role!=='system')};if(sys)body.system=sys;if(temp)body.temperature=0;}
   else{body={model:s.st.model,messages};if(temp)body.temperature=0;}
   const path=P.native==='gemini'?'/models/'+encodeURIComponent(s.st.model)+':generateContent':P.native?'/messages':'/chat/completions';
-  let r;try{r=await fetch(P.base+path,{method:'POST',headers:{...aiHeaders(P,s.key),'Content-Type':'application/json'},body:JSON.stringify(body)})}
+  let r;try{r=await aiFetch(P.base+path,{method:'POST',headers:{...aiHeaders(P,s.key),'Content-Type':'application/json'},body:JSON.stringify(body)})}
   catch(e){throw new Error(P.name+' could not be reached')}
   if(r.status===429)throw new Error(P.name+' hit a rate or spending limit');
   if(r.status===401||r.status===403)throw new Error(P.name+' refused the key');

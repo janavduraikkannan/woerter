@@ -96,13 +96,13 @@ video{width:100%;border-radius:8px;border:2px solid var(--line2);background:#111
   <h2>What’s private, and what isn’t</h2>
   <div class="tri">
     <section class="ok"><h3>Private</h3><ul>
-      <li>Your AI key, unless you choose to save it. <template data-s="name"></template> has no server of its own: the key goes straight from your browser to the AI company.</li>
+      <li>Your AI key, unless you choose to save it. <template data-s="name"></template> never stores it: it goes from your browser to the AI company, passing through the <template data-s="name"></template> relay (a small server on Cloudflare that saves nothing) unless you switch the relay off under the key box.</li>
       <li>Without an account, your progress stays in your own browser.</li>
     </ul></section>
     <section class="maybe"><h3>Up to other companies</h3><ul>
       <li>When an answer is checked or you ask <template data-s="cat"></template> something, the sentence, your answer and your question go to the AI company (Groq). What they keep is up to their privacy policy, not <template data-s="name"></template>.</li>
       <li>Your sign-up email goes to Groq, not to <template data-s="name"></template>.</li>
-      <li>The site is hosted by GitHub, and accounts are stored with Google Firebase.</li>
+      <li>The site is hosted by GitHub, accounts are stored with Google Firebase, and the relay runs on Cloudflare. They may keep basic logs, like your IP address.</li>
     </ul></section>
     <section class="no"><h3>Not private</h3><ul>
       <li>The leaderboard and anything you put in your profile can be seen by other people.</li>

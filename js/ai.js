@@ -12,7 +12,10 @@ const PROVIDERS={
   // Paid keys. Each uses a cheap, fast model from the family, which is plenty for grading and short tutoring replies.
   openai:{name:'OpenAI (ChatGPT)',paid:true,base:'https://api.openai.com/v1',re:/^sk-(?!or-|ant-)/,prefer:['gpt-4.1-mini','gpt-5-mini','gpt-4o-mini','mini'],skip:/audio|realtime|tts|whisper|embed|image|dall|search|transcri|moderation|codex|instruct|davinci|babbage|nano|preview|\d{4}-\d\d-\d\d/i,fallback:'gpt-4.1-mini'},
   anthropic:{name:'Anthropic (Claude)',paid:true,native:'anthropic',base:'https://api.anthropic.com/v1',re:/^sk-ant-/,check:'/models?limit=100',prefer:['haiku','sonnet'],skip:/claude-(2|instant|3-)/i,fallback:'claude-haiku-4-5'},
-  xai:{name:'xAI (Grok)',paid:true,base:'https://api.x.ai/v1',re:/^xai-/,prefer:['grok-4-fast-non-reasoning','grok-4-1-fast-non-reasoning','grok-3-mini','fast-non-reasoning','mini'],skip:/image|vision|imagine|embed|code/i,fallback:'grok-3-mini'}
+  xai:{name:'xAI (Grok)',paid:true,base:'https://api.x.ai/v1',re:/^xai-/,prefer:['grok-4-fast-non-reasoning','grok-4-1-fast-non-reasoning','grok-3-mini','fast-non-reasoning','mini'],skip:/image|vision|imagine|embed|code/i,fallback:'grok-3-mini'},
+  // Gonka Broker: pay-as-you-go, OpenAI-compatible access to open models on the decentralized Gonka network. Its model list is
+  // public, so the key is checked with a one-token request instead (verifyChat). Instruct models first: they answer fastest.
+  gonka:{name:'Gonka Broker',paid:true,base:'https://proxy.gonkabroker.com/v1',re:/^gnk-/,verifyChat:true,prefer:['Qwen3-235B-A22B-Instruct','Instruct','Qwen3','qwen','MiniMax','llama','deepseek'],skip:/embed|vision|VL|image|audio|tts|whisper|coder|guard/i,fallback:'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8'}
 };
 // Anthropic accepts calls straight from a web page only with its explicit browser-access header.
 const aiHeaders=(P,key)=>P.native==='anthropic'?{'x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}:P.native==='gemini'?{'x-goog-api-key':key}:{Authorization:'Bearer '+key};
@@ -47,6 +50,11 @@ async function tryProvider(id,key){
   ids=ids.filter(i=>!P.skip.test(i));
   if(P.native==='gemini'){const c=geminiRank(ids);if(!c.includes(P.fallback))c.push(P.fallback);return{prov:id,model:c[0],cands:c.slice(1)}}
   const model=P.prefer.map(x=>ids.find(i=>i.includes(x))).find(Boolean)||ids[0]||P.fallback;
+  if(P.verifyChat){ // the model list doesn't need a key, so make sure this one works (costs one token)
+    let v;try{v=await aiFetch(P.base+'/chat/completions',{method:'POST',headers:{...h,'Content-Type':'application/json'},body:JSON.stringify({model,messages:[{role:'user',content:'Hi'}],max_tokens:1})})}catch(e){throw new Error(`Couldn't reach ${P.name} from this page`)}
+    if(v.status===401||v.status===403)throw new Error(`${P.name} did not accept that key`);
+    if(v.status===402)throw new Error(`${P.name} says the account is out of credit`);
+  }
   return{prov:id,model};
 }
 const guessProv=key=>Object.keys(PROVIDERS).filter(id=>PROVIDERS[id].re.test(key));
@@ -119,5 +127,5 @@ async function chatWith(s,messages,retry=true,temp=true){
   const j=await r.json();
   if(P.native==='gemini')return(((j.candidates||[])[0]||{}).content?.parts||[]).filter(x=>!x.thought&&x.text).map(x=>x.text).join('');
   if(P.native)return(j.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
-  return String(((j.choices||[])[0]||{}).message?.content||'');
+  return String(((j.choices||[])[0]||{}).message?.content||'').replace(/<think>[\s\S]*?<\/think>/gi,'').trim();
 }
